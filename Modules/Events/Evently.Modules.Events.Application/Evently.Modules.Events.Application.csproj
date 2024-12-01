@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Evently.Modules.Events.Domain\Evently.Modules.Events.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Events\GetEvents\" />
+    <Folder Include="Events\SearchEvents\" />
+    <Folder Include="Events\RescheduledEvent\" />
+    <Folder Include="Events\PublishEvent\" />
+  </ItemGroup>
+
+</Project>
