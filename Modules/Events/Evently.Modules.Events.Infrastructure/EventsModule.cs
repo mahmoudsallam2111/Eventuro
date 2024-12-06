@@ -1,10 +1,16 @@
 ﻿using Evently.Modules.Events.Application;
+using Evently.Modules.Events.Application.Abstractions.Clock;
 using Evently.Modules.Events.Application.Abstractions.Data;
+using Evently.Modules.Events.Domain.Category;
 using Evently.Modules.Events.Domain.Event;
+using Evently.Modules.Events.Domain.TicketTypes;
+using Evently.Modules.Events.Infrastructure.CategoryRepositories;
+using Evently.Modules.Events.Infrastructure.Clock;
 using Evently.Modules.Events.Infrastructure.Data;
 using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Event;
-using Evently.Modules.Events.Presentation.Events;
+using Evently.Modules.Events.Infrastructure.TicketTypes;
+using Evently.Modules.Events.Presentation;
 using FluentValidation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +36,10 @@ public static class EventsModule
 
         services.AddMediatR(config =>
         {
-            config.RegisterServicesFromAssemblies(AssemblyReference.Assembly);
+            config.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly);
         });
 
-        services.AddValidatorsFromAssembly(AssemblyReference.Assembly , includeInternalTypes : true);
+        services.AddValidatorsFromAssembly(Application.AssemblyReference.Assembly, includeInternalTypes : true);
 
        services.AddInfrastructue(configuration);
 
@@ -49,7 +55,7 @@ public static class EventsModule
 
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
-
+        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         services.AddDbContext<EventsDbContext>(options =>
             options
@@ -62,5 +68,7 @@ public static class EventsModule
         // Register Services
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
+        services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
 }

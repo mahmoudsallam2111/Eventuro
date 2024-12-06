@@ -1,4 +1,6 @@
 ﻿using Evently.Modules.Events.Application.Abstractions.Data;
+using Evently.Modules.Events.Domain.Category;
+using Evently.Modules.Events.Domain.TicketTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Modules.Events.Infrastructure.Database;
@@ -6,6 +8,9 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
 {
     internal DbSet<Events.Domain.Event.Event> Events { get; set; }
 
+    internal DbSet<Category> Categories { get; set; }
+
+    internal DbSet<TicketType> TicketTypes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Events);

@@ -1,32 +1,35 @@
-﻿using Evently.Modules.Events.Presentation;
+﻿using Evently.Modules.Events.Application.Events.CreateEvent;
+using Evently.Modules.Events.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Evently.Modules.Events.Application.Events;
+
+namespace Evently.Modules.Events.Presentation.Events;
 
 
 public static class CreateEvent
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("events", async (Request request,ISender sender) =>
+        app.MapPost("events", async (Request request, ISender sender) =>
         {
 
 
-            var command = new CreateEventCommand(request.Title , request.Description , request.Location , 
-                request.StartsAtUtc , request.EndsAtUtc);
+            var command =new CreateEventCommand(request.CategoryId, request.Title, request.Description, request.Location,
+                request.StartsAtUtc, request.EndsAtUtc);
 
-            Guid eventId = await sender.Send(command);
+            Result<Guid> eventId = await sender.Send(command);
 
-            return Results.Ok(eventId);
+            return Results.Ok(eventId.Value);
         })
         .WithTags(Tags.Events);
     }
 
     internal sealed class Request
     {
+        public Guid CategoryId { get; init; }
         public string Title { get; set; }
 
         public string Description { get; set; }

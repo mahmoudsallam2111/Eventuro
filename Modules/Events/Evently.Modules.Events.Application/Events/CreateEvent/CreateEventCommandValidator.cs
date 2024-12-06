@@ -6,6 +6,7 @@ internal sealed class CreateEventCommandValidator : AbstractValidator<CreateEven
 {
     public CreateEventCommandValidator()
     {
+        RuleFor( x => x.CategoryId ).NotEmpty();
         RuleFor( x => x.Title ).NotEmpty();
         RuleFor( x => x.Location ).NotEmpty();
         RuleFor( x => x.Description ).NotEmpty();
