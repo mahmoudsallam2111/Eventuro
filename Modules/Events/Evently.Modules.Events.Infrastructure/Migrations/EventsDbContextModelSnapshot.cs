@@ -86,6 +86,9 @@ namespace Evently.Modules.Events.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_events");
 
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_events_category_id");
+
                     b.ToTable("events", "events");
                 });
 
@@ -121,7 +124,30 @@ namespace Evently.Modules.Events.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_ticket_types");
 
+                    b.HasIndex("EventId")
+                        .HasDatabaseName("ix_ticket_types_event_id");
+
                     b.ToTable("ticket_types", "events");
+                });
+
+            modelBuilder.Entity("Evently.Modules.Events.Domain.Event.Event", b =>
+                {
+                    b.HasOne("Evently.Modules.Events.Domain.Category.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_events_categories_category_id");
+                });
+
+            modelBuilder.Entity("Evently.Modules.Events.Domain.TicketTypes.TicketType", b =>
+                {
+                    b.HasOne("Evently.Modules.Events.Domain.Event.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_ticket_types_events_event_id");
                 });
 #pragma warning restore 612, 618
         }

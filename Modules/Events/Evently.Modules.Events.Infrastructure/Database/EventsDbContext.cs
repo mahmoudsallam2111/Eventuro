@@ -1,6 +1,8 @@
 ﻿using Evently.Modules.Events.Application.Abstractions.Data;
 using Evently.Modules.Events.Domain.Category;
 using Evently.Modules.Events.Domain.TicketTypes;
+using Evently.Modules.Events.Infrastructure.Event;
+using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Modules.Events.Infrastructure.Database;
@@ -14,6 +16,9 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Events);
+
+        modelBuilder.ApplyConfiguration(new EventEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new TicketTypeEntityTypeConfiguration());
     }
 }
 

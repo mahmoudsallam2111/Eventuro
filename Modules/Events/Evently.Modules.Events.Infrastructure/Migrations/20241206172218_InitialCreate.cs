@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Evently.Modules.Events.Infrastructure.Migrations;
 
 /// <inheritdoc />
-public partial class AddingNewEntities : Migration
+public partial class InitialCreate : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,6 +45,13 @@ public partial class AddingNewEntities : Migration
             constraints: table =>
             {
                 table.PrimaryKey("pk_events", x => x.id);
+                table.ForeignKey(
+                    name: "fk_events_categories_category_id",
+                    column: x => x.category_id,
+                    principalSchema: "events",
+                    principalTable: "categories",
+                    principalColumn: "id",
+                    onDelete: ReferentialAction.Cascade);
             });
 
         migrationBuilder.CreateTable(
@@ -62,14 +69,33 @@ public partial class AddingNewEntities : Migration
             constraints: table =>
             {
                 table.PrimaryKey("pk_ticket_types", x => x.id);
+                table.ForeignKey(
+                    name: "fk_ticket_types_events_event_id",
+                    column: x => x.event_id,
+                    principalSchema: "events",
+                    principalTable: "events",
+                    principalColumn: "id",
+                    onDelete: ReferentialAction.Cascade);
             });
+
+        migrationBuilder.CreateIndex(
+            name: "ix_events_category_id",
+            schema: "events",
+            table: "events",
+            column: "category_id");
+
+        migrationBuilder.CreateIndex(
+            name: "ix_ticket_types_event_id",
+            schema: "events",
+            table: "ticket_types",
+            column: "event_id");
     }
 
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropTable(
-            name: "categories",
+            name: "ticket_types",
             schema: "events");
 
         migrationBuilder.DropTable(
@@ -77,7 +103,7 @@ public partial class AddingNewEntities : Migration
             schema: "events");
 
         migrationBuilder.DropTable(
-            name: "ticket_types",
+            name: "categories",
             schema: "events");
     }
 }
