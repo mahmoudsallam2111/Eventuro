@@ -6,8 +6,6 @@ using Evently.Modules.Events.Domain.Category;
 using Evently.Modules.Events.Domain.Event;
 using Evently.Modules.Events.Domain.TicketTypes;
 using Evently.Modules.Events.Infrastructure.CategoryRepositories;
-using Evently.Modules.Events.Infrastructure.Clock;
-using Evently.Modules.Events.Infrastructure.Data;
 using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Event;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
@@ -45,13 +43,6 @@ public static class EventsModule
     private static void AddInfrastructue(this IServiceCollection services , IConfiguration configuration)
     {
         string databaseConnectionString = configuration.GetConnectionString("Database")!;
-
-        NpgsqlDataSource npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
-        services.TryAddSingleton(npgsqlDataSource);
-
-        services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-
-        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         services.AddDbContext<EventsDbContext>(options =>
             options
