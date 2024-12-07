@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Evently.Modules.Events.Application.Abstractions.Data;
-using Evently.Modules.Events.Application.Abstractions.Messaging;
-using Evently.Modules.Events.Domain.Abstractions;
+using Evently.Common.Application.Data;
+using Evently.Common.Application.Messaging;
+using Evently.Common.Domain;
 using Evently.Modules.Events.Domain.Category;
 
 namespace Evently.Modules.Events.Application.Categories.GetCategory;

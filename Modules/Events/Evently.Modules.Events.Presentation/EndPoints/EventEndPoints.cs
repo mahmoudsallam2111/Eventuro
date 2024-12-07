@@ -1,8 +1,7 @@
-﻿using Evently.Modules.Events.Application.Events;
-using Evently.Modules.Events.Presentation.Events;
+﻿using Evently.Modules.Events.Presentation.Events;
 using Microsoft.AspNetCore.Routing;
 
-namespace Evently.Modules.Events.Presentation;
+namespace Evently.Modules.Events.Presentation.EndPoints;
 public static class EventEndPoints
 {
     public static void MapEndPoints(IEndpointRouteBuilder app)

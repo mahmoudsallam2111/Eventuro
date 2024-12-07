@@ -1,7 +1,4 @@
-﻿using Evently.Modules.Events.Domain.Event;
-
-namespace Evently.Modules.Events.Domain.Abstractions;
-
+﻿namespace Evently.Common.Domain;
 public abstract class Entity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
@@ -11,7 +8,8 @@ public abstract class Entity
     }
 
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.ToList();
-    public void ClearDomainEvent()
+
+    public void ClearDomainEvents()
     {
         _domainEvents.Clear();
     }
