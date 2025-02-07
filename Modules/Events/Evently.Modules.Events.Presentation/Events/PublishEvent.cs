@@ -1,22 +1,23 @@
 ﻿using Evently.Common.Domain;
+using Evently.Common.Presentation.ApiResults;
+using Evently.Common.Presentation.EndPoints;
 using Evently.Modules.Events.Application.Events.PublishEvent;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 
 namespace Evently.Modules.Events.Presentation.Events;
-public static class PublishEvent
+public class PublishEvent : IEndPoint
 {
-    internal static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("publishevent/{id}", async (Guid id,ISender sender) =>
         {
          
             Result result = await sender.Send(new PublishEventCommand(id));
 
-            return result.IsSuccess ? Results.Ok(result) : Results.Problem();
+            return result.Match(Results.NoContent, ApiResults.Problem);
 
         })
         .WithTags(Tags.Events);

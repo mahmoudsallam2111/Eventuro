@@ -1,22 +1,21 @@
 ﻿using Evently.Common.Domain;
-using Evently.Modules.Events.Application.Events.GetEvent;
+using Evently.Common.Presentation.ApiResults;
+using Evently.Common.Presentation.EndPoints;
 using Evently.Modules.Events.Application.Events.GetEvents;
-using Evently.Modules.Events.Domain.Event;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Evently.Modules.Events.Presentation.Events;
-public static class GetEvents
+public class GetEvents : IEndPoint
 {
-    internal static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("events", async (ISender sender) =>
         {
             Result<IReadOnlyCollection<GetEventResponse>> result = await sender.Send(new GetEventsQuery());
-            return result is null ? Results.NotFound() : Results.Ok(result.Value);
+            return result.Match(Results.Ok, ApiResults.Problem);
 
         })
         .WithTags(Tags.Events);

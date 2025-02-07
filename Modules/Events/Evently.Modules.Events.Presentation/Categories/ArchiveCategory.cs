@@ -1,4 +1,6 @@
 ﻿using Evently.Common.Domain;
+using Evently.Common.Presentation.ApiResults;
+using Evently.Common.Presentation.EndPoints;
 using Evently.Modules.Events.Application.Categories.ArchiveCategory;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -6,15 +8,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace Evently.Modules.Events.Presentation.Categories;
-public static class ArchiveCategory
+public class ArchiveCategory : IEndPoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("categories/{id}/archive", async (Guid id, ISender sender) =>
         {
             Result result = await sender.Send(new ArchiveCategoryCommand(id));
 
-            return result.IsSuccess ? Results.Ok() : Results.Problem();
+            return result.Match(() => Results.Ok(), ApiResults.Problem);
         })
         .WithTags(Tags.Categories);
     }
