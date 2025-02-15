@@ -18,6 +18,7 @@ internal sealed class GetAllTicketTypesQueryHandler(IDbConnectionFactory dbConne
             $"""
              SELECT
                  id AS {nameof(GetTicketTypeResponse.Id)},
+                 event_id AS {nameof(GetTicketTypeResponse.EventId)},
                  name AS {nameof(GetTicketTypeResponse.Name)},
                  price AS {nameof(GetTicketTypeResponse.Price)},
                  currency AS {nameof(GetTicketTypeResponse.Currency)},

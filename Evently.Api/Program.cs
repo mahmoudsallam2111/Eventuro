@@ -4,6 +4,7 @@ using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.EndPoints;
 using Evently.Modules.Events.Infrastructure;
+using Evently.Modules.Users.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
@@ -28,7 +29,10 @@ builder.Services.AddSwaggerGen();
 
 #region common Cross Cutting Concerns
 
-builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly]);  // add an array of assembly
+builder.Services.AddApplication([
+    Evently.Modules.Events.Application.AssemblyReference.Assembly,
+    Evently.Modules.Users.Application.AssemblyReference.Assembly,
+    Evently.Modules.Ticketing.Application.AssemblyReference.Assembly]);  // add an array of assembly
 
 string databaseConnectionString = builder.Configuration.GetConnectionString("Database")!;
 string redisConnectionString = builder.Configuration.GetConnectionString("Cache")!;
@@ -37,7 +41,7 @@ builder.Services.AddInfrastracture(
    databaseConnectionString,
    redisConnectionString);   // for dapper connectiondb which is a cross cutting concern
 
-builder.Configuration.AddModuleConfiguration(["events"]);
+builder.Configuration.AddModuleConfiguration(["events" , "users" , "ticketing"]);  // register modules json files automatically
 
 #endregion
 
@@ -49,7 +53,13 @@ builder.Services.AddHealthChecks()
 
 #endregion
 
+// adding modules here 
 builder.Services.AddEventsModule(builder.Configuration);
+builder.Services.AddUsersModule(builder.Configuration);
+builder.Services.AddTicketingModule();
+
+
+
 
 WebApplication app = builder.Build();
 

@@ -14,7 +14,7 @@ public class CreateEvent : IEndPoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("events", async (Request request, ISender sender) =>
+        app.MapPost("events", async (CreateEventRequest request, ISender sender) =>
         {
 
 
@@ -28,7 +28,7 @@ public class CreateEvent : IEndPoint
         .WithTags(Tags.Events);
     }
 
-    internal sealed class Request
+    internal sealed class CreateEventRequest
     {
         public Guid CategoryId { get; init; }
         public string Title { get; set; }
