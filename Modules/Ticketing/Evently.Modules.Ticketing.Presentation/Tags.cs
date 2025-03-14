@@ -3,6 +3,6 @@ internal static class Tags
 {
     internal const string Carts = "Carts";
     internal const string Orders = "Orders";
-    internal const string tickets = "tickets";
+    internal const string Tickets = "Tickets";
 }
 

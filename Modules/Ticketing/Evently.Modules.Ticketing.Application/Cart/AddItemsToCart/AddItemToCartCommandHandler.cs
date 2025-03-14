@@ -3,16 +3,17 @@ using Evently.Common.Domain;
 using Evently.Modules.Events.PublicApi;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Domain.Events;
-using Evently.Modules.Users.PublicApi;
 
 namespace Evently.Modules.Ticketing.Application.Cart.AddItemsToCart;
-internal sealed class AddItemToCartCommandHandler(CartService cartService, IUserApi usersApi, IEventApi eventsApi)
+internal sealed class AddItemToCartCommandHandler(CartService cartService,
+    ICustomerRepository customerRepository, 
+    IEventApi eventsApi)
     : ICommandHandler<AddItemToCartCommand>
 {
     public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
     {
         // 1. Get customer
-        UserResponse? customer = await usersApi.GetUserAsync(request.CustomerId, cancellationToken);
+        Customer? customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
 
         if (customer is null)
         {

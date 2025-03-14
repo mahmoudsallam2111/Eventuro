@@ -1,7 +1,7 @@
 ﻿using Evently.Common.Domain;
 using Evently.Common.Presentation.ApiResults;
 using Evently.Common.Presentation.EndPoints;
-using Evently.Modules.Events.Application.TicketTypes.UpdateTicketType;
+using Evently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

@@ -4,6 +4,7 @@ using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.EndPoints;
 using Evently.Modules.Events.Infrastructure;
+using Evently.Modules.Ticketing.Infrastracture;
 using Evently.Modules.Users.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -38,6 +39,7 @@ string databaseConnectionString = builder.Configuration.GetConnectionString("Dat
 string redisConnectionString = builder.Configuration.GetConnectionString("Cache")!;
 
 builder.Services.AddInfrastracture(
+    [TicketingModule.ConfigureConsumers],
    databaseConnectionString,
    redisConnectionString);   // for dapper connectiondb which is a cross cutting concern
 
@@ -56,7 +58,7 @@ builder.Services.AddHealthChecks()
 // adding modules here 
 builder.Services.AddEventsModule(builder.Configuration);
 builder.Services.AddUsersModule(builder.Configuration);
-builder.Services.AddTicketingModule();
+builder.Services.AddTicketingModule(builder.Configuration);
 
 
 
@@ -83,6 +85,10 @@ app.MapHealthChecks("health" , new HealthCheckOptions
 app.UseSerilogRequestLogging();    // add logging middleware
 
 app.UseExceptionHandler();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.Run();
 

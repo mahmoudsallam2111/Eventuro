@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Evently.Common.Application.Messaging;
 
-namespace Evently.Modules.Events.Application.TicketTypes.UpdateTicketType;
+namespace Evently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
 public sealed record UpdateTicketTypePriceCommand(Guid TicketTypeId, decimal Price) : ICommand;
 

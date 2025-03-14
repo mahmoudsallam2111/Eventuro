@@ -21,7 +21,7 @@ public class CreateTicketType : IEndPoint
                 request.Currency,
                 request.Quantity));
 
-            return result.Match(Results.NoContent, ApiResults.Problem);
+            return result.Match(Results.Ok, ApiResults.Problem);
         })
         .WithTags(Tags.TicketTypes);
     }

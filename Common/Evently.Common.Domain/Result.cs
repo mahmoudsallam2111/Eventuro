@@ -62,5 +62,10 @@ public class Result<TValue> : Result
 
     public static Result<TValue> ValidationFailure(Error error) =>
         new(default, false, error);
+
+    public object Match(object ok, object problem)
+    {
+        throw new NotImplementedException();
+    }
 }
 
