@@ -8,6 +8,7 @@ using Evently.Modules.Ticketing.Infrastracture;
 using Evently.Modules.Users.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -37,11 +38,13 @@ builder.Services.AddApplication([
 
 string databaseConnectionString = builder.Configuration.GetConnectionString("Database")!;
 string redisConnectionString = builder.Configuration.GetConnectionString("Cache")!;
+string mongoConnectionString = builder.Configuration.GetConnectionString("Mongo")!;
 
 builder.Services.AddInfrastracture(
     [TicketingModule.ConfigureConsumers],
    databaseConnectionString,
-   redisConnectionString);   // for dapper connectiondb which is a cross cutting concern
+   redisConnectionString,
+   mongoConnectionString);   // for dapper connectiondb which is a cross cutting concern
 
 builder.Configuration.AddModuleConfiguration(["events" , "users" , "ticketing"]);  // register modules json files automatically
 
@@ -51,7 +54,8 @@ builder.Configuration.AddModuleConfiguration(["events" , "users" , "ticketing"])
 
 builder.Services.AddHealthChecks()
     .AddNpgSql(databaseConnectionString)
-    .AddRedis(redisConnectionString);
+    .AddRedis(redisConnectionString)
+    .AddMongoDb(_ => new MongoDB.Driver.MongoClient(mongoConnectionString));
 
 #endregion
 

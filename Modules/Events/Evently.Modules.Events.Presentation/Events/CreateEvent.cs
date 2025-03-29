@@ -18,7 +18,7 @@ public class CreateEvent : IEndPoint
         {
 
 
-            var command =new CreateEventCommand(request.CategoryId, request.Title, request.Description, request.Location,
+            var command =new Evently.Modules.Events.Application.Events.CreateEvent.CreateEventCommand(request.CategoryId, request.Title, request.Description, request.Location,
                 request.StartsAtUtc, request.EndsAtUtc);
 
             Result<Guid> eventId = await sender.Send(command);

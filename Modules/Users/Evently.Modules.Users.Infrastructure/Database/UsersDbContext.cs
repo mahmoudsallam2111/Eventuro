@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Users.Application.Abstractions.Data;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure.Users;
@@ -16,6 +17,8 @@ public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options) : D
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Users);
+
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());  // for implemention outBox pattern
         modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
     }
 }

@@ -1,16 +1,18 @@
-﻿using Evently.Common.Infrastructure.Interceptors;
+﻿using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.EndPoints;
 using Evently.Modules.Events.Application.Abstractions.Data;
+using Evently.Modules.Events.Application.EventStatistics;
 using Evently.Modules.Events.Domain.Category;
 using Evently.Modules.Events.Domain.Event;
 using Evently.Modules.Events.Domain.TicketTypes;
 using Evently.Modules.Events.Infrastructure.Categories;
 using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Event;
+using Evently.Modules.Events.Infrastructure.EventStatistics;
+using Evently.Modules.Events.Infrastructure.Outbox;
 using Evently.Modules.Events.Infrastructure.PublicApi;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Evently.Modules.Events.PublicApi;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +45,7 @@ public static class EventsModule
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
                 .UseSnakeCaseNamingConvention()
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptors>()));
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptors>()));
 
 
         // Register Services
@@ -51,7 +53,19 @@ public static class EventsModule
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
         services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IEventStatisticsRepository, EventStatisticsRepository>();
 
         services.AddScoped<IEventApi, EventApi>();
+
+
+        // this is option pattern
+        services.AddOptions<DocumentDbSettings>()
+            .BindConfiguration("MongoSettings")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.Configure<OutboxOptions>(configuration.GetSection("Events:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
     }
 }

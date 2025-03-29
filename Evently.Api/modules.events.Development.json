@@ -1,5 +1,12 @@
 {
   "Events": {
-
+    "Outbox": {
+      "IntervalInSeconds": 5,
+      "BatchSize": 20
+    }
+  },
+  "MongoSettings": {
+    "Database": "events",
+    "EventStatistics": "events-statistics"
   }
 }

@@ -6,12 +6,16 @@ using Evently.Common.Infrastructure.Authentication;
 using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
-using Evently.Common.Infrastructure.EventBus;
-using Evently.Common.Infrastructure.Interceptors;
+using Evently.Common.Infrastructure.Outbox;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Npgsql;
+using Quartz;
 using StackExchange.Redis;
 
 namespace Evently.Common.Infrastructure;
@@ -22,7 +26,8 @@ public static class InfrastractureConfiguration
         this IServiceCollection services,
         Action<IRegistrationConfigurator>[] moduleConfigurationConsumers,
         string databaseConnectionString ,
-        string redisConnectionString)
+        string redisConnectionString,
+        string mongoConnectionString)
     {
 
         services.AddAuthenticationInternal();
@@ -35,7 +40,11 @@ public static class InfrastractureConfiguration
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
 
-        services.TryAddSingleton<PublishDomainEventsInterceptors>();   // regiter PublishDomainEventsInterceptors
+        services.TryAddSingleton<InsertOutboxMessagesInterceptors>();   // regiter PublishDomainEventsInterceptors
+
+        // register Quartz 
+        services.AddQuartz();    
+        services.AddQuartzHostedService(opt=>opt.WaitForJobsToComplete = true);    
 
 
         #region register caching dependencies
@@ -78,6 +87,14 @@ public static class InfrastractureConfiguration
                 cfg.ConfigureEndpoints(context);
             });
         });
+
+        services.AddSingleton<IMongoClient>(sp =>
+        {
+            var mongoClientSettings = MongoClientSettings.FromConnectionString(mongoConnectionString);
+            return new MongoClient(mongoClientSettings);
+        });
+
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
         return services;
     }

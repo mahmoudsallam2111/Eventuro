@@ -47,6 +47,17 @@ services:
     restart: always
     container_name: Evently.Redis
     ports:
-      - "6379:6379" 
+      - "6379:6379"
+ 
+  evently.mongo:
+    image: mongo:latest
+    container_name: Evently.Mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - ./.containers/mongo:/data/db
+    ports:
+      - 27017:27017
     
 

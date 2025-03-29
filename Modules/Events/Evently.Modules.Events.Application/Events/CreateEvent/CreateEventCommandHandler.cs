@@ -12,7 +12,7 @@ internal sealed class CreateEventCommandHandler(IEventRepository eventRepository
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
         ICategoryRepository categoryRepository)
-      : ICommandHandler<CreateEventCommand, Guid>
+      : ICommandHandler<Evently.Modules.Events.Application.Events.CreateEvent.CreateEventCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
